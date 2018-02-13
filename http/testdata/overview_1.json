@@ -1,0 +1,130 @@
+{
+  "management_version": "3.6.10",
+  "rates_mode": "basic",
+  "exchange_types": [
+      {
+          "name": "direct",
+          "description": "AMQP direct exchange, as per the AMQP specification",
+          "enabled": true
+      },
+      {
+          "name": "fanout",
+          "description": "AMQP fanout exchange, as per the AMQP specification",
+          "enabled": true
+      },
+      {
+          "name": "headers",
+          "description": "AMQP headers exchange, as per the AMQP specification",
+          "enabled": true
+      },
+      {
+          "name": "topic",
+          "description": "AMQP topic exchange, as per the AMQP specification",
+          "enabled": true
+      }
+  ],
+  "rabbitmq_version": "3.6.10",
+  "cluster_name": "rabbit@host",
+  "erlang_version": "18.3",
+  "erlang_full_version": "Erlang/OTP 18 [erts-7.3] [source] [64-bit] [smp:8:8] [async-threads:128] [kernel-poll:true]",
+  "message_stats": {
+      "disk_reads": 0,
+      "disk_reads_details": {
+          "rate": 0
+      },
+      "disk_writes": 0,
+      "disk_writes_details": {
+          "rate": 0
+      }
+  },
+  "queue_totals": {
+      "messages_ready": 0,
+      "messages_ready_details": {
+          "rate": 0
+      },
+      "messages_unacknowledged": 0,
+      "messages_unacknowledged_details": {
+          "rate": 0
+      },
+      "messages": 0,
+      "messages_details": {
+          "rate": 0
+      }
+  },
+  "object_totals": {
+      "consumers": 0,
+      "queues": 4,
+      "exchanges": 15,
+      "connections": 1,
+      "channels": 0
+  },
+  "statistics_db_event_queue": 0,
+  "node": "rabbit@host",
+  "listeners": [
+      {
+          "node": "rabbit@host",
+          "protocol": "amqp",
+          "ip_address": "::",
+          "port": 5672,
+          "socket_opts": {
+              "backlog": 128,
+              "nodelay": true,
+              "linger": [
+                  true,
+                  0
+              ],
+              "exit_on_close": false
+          }
+      },
+      {
+          "node": "rabbit@host",
+          "protocol": "amqp/ssl",
+          "ip_address": "::",
+          "port": 5671,
+          "socket_opts": {
+              "backlog": 128,
+              "nodelay": true,
+              "linger": [
+                  true,
+                  0
+              ],
+              "exit_on_close": false,
+              "versions": [
+                  "tlsv1.2",
+                  "tlsv1.1",
+                  "tlsv1"
+              ],
+              "cacertfile": "/etc/ssl/certs/rabbitmq/rabbitmq.cacert.pem",
+              "certfile": "/etc/ssl/certs/rabbitmq/rabbitmq.cert.pem",
+              "keyfile": "/etc/ssl/certs/rabbitmq/rabbitmq.key.pem",
+              "verify": "verify_peer",
+              "fail_if_no_peer_cert": true
+          }
+      },
+      {
+          "node": "rabbit@host",
+          "protocol": "clustering",
+          "ip_address": "::",
+          "port": 25672,
+          "socket_opts": []
+      },
+      {
+          "node": "rabbit@host",
+          "protocol": "http",
+          "ip_address": "::",
+          "port": 15672,
+          "socket_opts": {
+              "port": 15672
+          }
+      }
+  ],
+  "contexts": [
+      {
+          "ssl_opts": [],
+          "node": "rabbit@host",
+          "description": "RabbitMQ Management",
+          "path": "/",
+          "port": "15672"
+      }
+  ]
+}

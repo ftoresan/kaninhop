@@ -11,25 +11,38 @@ import (
 	"net/http"
 )
 
+type dataRetriever func(url string, method string, user string, pass string) ([]byte, error)
+
 // A Client is a representation of a connection with the RabbitMQ HTTP API
 type Client struct {
-	url  string
-	user string
-	pass string
+	url     string
+	user    string
+	pass    string
+	dataRet dataRetriever
 }
 
 // NewClient creates a new Client instance with the given arguments
 func NewClient(u string, us string, p string) *Client {
 	return &Client{
-		url:  u,
-		user: us,
-		pass: p,
+		url:     u,
+		user:    us,
+		pass:    p,
+		dataRet: call,
+	}
+}
+
+func newClientWithDataRet(u string, us string, p string, dr dataRetriever) *Client {
+	return &Client{
+		url:     u,
+		user:    us,
+		pass:    p,
+		dataRet: dr,
 	}
 }
 
 // Overview returns general information about the broker
 func (c *Client) Overview() (Overview, error) {
-	data, err := c.callAPI("/overview", "GET")
+	data, err := c.dataRet(c.url+"/overview", "GET", c.user, c.pass)
 	if err != nil {
 		return Overview{}, err
 	}
@@ -38,8 +51,9 @@ func (c *Client) Overview() (Overview, error) {
 	return o, nil
 }
 
+// Connections returns info about all the connections in the broker
 func (c *Client) Connections() ([]Connection, error) {
-	data, err := c.callAPI("/connections", "GET")
+	data, err := c.dataRet(c.url+"/connections", "GET", c.user, c.pass)
 	if err != nil {
 		return nil, err
 	}
@@ -49,14 +63,14 @@ func (c *Client) Connections() ([]Connection, error) {
 	return conns, nil
 }
 
-func (c *Client) callAPI(url string, m string) ([]byte, error) {
+func call(url string, m string, user string, pass string) ([]byte, error) {
 	client := &http.Client{}
-	req, err := http.NewRequest(m, c.url+url, nil)
+	req, err := http.NewRequest(m, url, nil)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
-	req.SetBasicAuth(c.user, c.pass)
+	req.SetBasicAuth(user, pass)
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println(err)

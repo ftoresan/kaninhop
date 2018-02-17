@@ -15,9 +15,11 @@ func TestOverview(t *testing.T) {
 	overview, _ := client.Overview()
 
 	expectedOverview := Overview{
-		Node:        "rabbit@host",
-		ClusterName: "rabbit@host",
-		Version:     "3.6.10",
+		Node:          "rabbit@host",
+		ClusterName:   "rabbit@host",
+		Version:       "3.6.10",
+		MgtVersion:    "3.6.10",
+		ErlangVersion: "18.3",
 	}
 
 	compareOverview(expectedOverview, overview, t)
@@ -40,5 +42,11 @@ func compareOverview(o1 Overview, o2 Overview, t *testing.T) {
 	}
 	if o1.Version != o2.Version {
 		t.Fatalf("Expected version '%s' but got '%s'", o1.Version, o2.Version)
+	}
+	if o1.MgtVersion != o2.MgtVersion {
+		t.Fatalf("Expected management version '%s' but got '%s'", o1.MgtVersion, o2.MgtVersion)
+	}
+	if o1.ErlangVersion != o2.ErlangVersion {
+		t.Fatalf("Expected erlang version '%s' but got '%s'", o1.ErlangVersion, o2.ErlangVersion)
 	}
 }

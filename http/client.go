@@ -5,6 +5,7 @@ package http
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -63,6 +64,28 @@ func (c *Client) Connections() ([]Connection, error) {
 	return conns, nil
 }
 
+func (c *Client) Nodes() ([]Node, error) {
+	data, err := c.dataRet(c.url+"/nodes", "GET", c.user, c.pass)
+	if err != nil {
+		return nil, err
+	}
+	var nodes []Node
+	json.Unmarshal(data, &nodes)
+
+	return nodes, nil
+}
+
+func (c *Client) Node(name string) (Node, error) {
+	data, err := c.dataRet(c.url+"/nodes/"+name, "GET", c.user, c.pass)
+	if err != nil {
+		return Node{}, err
+	}
+	var node Node
+	json.Unmarshal(data, &node)
+
+	return node, nil
+}
+
 func call(url string, m string, user string, pass string) ([]byte, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(m, url, nil)
@@ -77,6 +100,10 @@ func call(url string, m string, user string, pass string) ([]byte, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New("Could not retrieve data: " + resp.Status)
+	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
